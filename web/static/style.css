@@ -1,0 +1,554 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url('fonts/Roboto/Roboto.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    margin-left: 70px;
+    margin-right: 70px;
+    margin-top: 30px;
+    box-sizing: border-box;
+
+    /* Чтобы контент не прятался под фиксированным хедером */
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+
+.drop-zone {
+    border: 2px dashed #ccc;
+    border-radius: 6px;
+    /*padding: 20px;*/
+    color: #999999;
+    cursor: pointer;
+
+    /*width: 900px;*/
+    height: 300px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    position: relative;
+    box-sizing: border-box;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+.drop-zone-text {
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+    word-wrap: break-word;
+    user-select: none;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.drop-zone-preview {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.drop-zone-preview img {
+    margin: 0;
+    padding: 0;
+    display: block;
+    height: 100%;
+    width: auto;
+}
+
+img {
+    display: block;
+    margin: 0;
+    padding: 0;
+    vertical-align: top;
+}
+
+#folder-panel, .text-output {
+    width: 290px;
+    border: 1px solid #004B8D;
+    border-radius: 6px;
+    background-color: #f5f5f5;
+    overflow-y: auto;
+    padding: 15px 20px;
+    font-family: 'Roboto', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 380px;
+    box-sizing: border-box;
+    color: #404040;
+}
+
+#select-folder-btn, #confirm-btn, #download-btn {
+    background-color: #0079c3;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 16px;
+    font-weight: 400;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+    outline: none;
+    appearance: none;
+    background-image: none;
+}
+
+#select-folder-btn:hover, #confirm-btn:hover, #download-btn:hover {
+    background-color: #1469a0;
+}
+
+#select-folder-btn:focus, #confirm-btn:focus, #download-btn:focus {
+    outline: 2px solid #4295df;
+    outline-offset: 2px;
+}
+
+#folder-structure {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #404040;
+    flex-grow: 1;
+    overflow-y: auto;
+    white-space: normal;
+}
+
+#folder-structure ul {
+    list-style: none;
+    padding-left: 20px;
+    margin: 0;
+}
+
+#folder-structure li {
+    margin: 6px 0;
+    cursor: default;
+    user-select: none;
+    line-height: 1.4;
+    position: relative;
+    padding-left: 24px;
+    color: #404040;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+#folder-structure li.folder-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    padding-left: 0;
+}
+
+/* Иконки папок и файлов через псевдоэлементы */
+#folder-structure li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+#folder-structure li:has(ul)::before {
+    background-image: url('src/folder.png');
+}
+
+#folder-structure li:not(:has(ul))::before {
+    background-image: url('src/file.png');
+}
+
+/* Подсветка при наведении на файл */
+#folder-structure li[draggable="true"]:hover {
+    background-color: #e6f0fa;
+    border-radius: 4px;
+    cursor: grab;
+}
+
+#folder-structure li[draggable="true"]:active {
+    cursor: grabbing;
+}
+
+#confirm-btn{
+    margin-left: -26px;
+}
+
+#download-btn {
+    margin-left: 32px;
+}
+
+.container-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.container-center-drop {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.text-output {
+    text-align: justify;
+    line-height: 1.5;
+}
+
+.header {
+    background-color: #00427a;
+    color: white;
+    padding: 16px 0;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.header .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
+    height: 36px;
+}
+
+.header h1 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 24px;
+}
+
+.header-logo {
+    position: absolute;
+    top: 10px;
+    margin-top: -10px;
+    left: 120px;
+    height: 60px;
+    width: auto;
+}
+
+.site-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    background: white;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    box-sizing: border-box;
+    z-index: 1000;
+    padding: 20px 0;
+    margin: 0;
+}
+
+.site-footer::before {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 100px;
+    right: 100px;
+    top: 0;
+    height: 1px;
+    background: #ccc;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.site-footer .container {
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.drop-zone-spinner {
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+    border: 4px solid #e0e0e0;
+    border-top: 4px solid #0079c3;
+    border-radius: 50%;
+    animation: dropzone-spin 1s linear infinite;
+    display: inline-block;
+}
+
+@keyframes dropzone-spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+}
+
+.drop-zone-preview {
+    position: relative;
+    height: 100%;
+    display: block;
+}
+.drop-zone-preview img {
+    height: 100%;
+    width: auto;
+    display: block;
+    user-select: none;
+    pointer-events: none;
+}
+
+.drop-zone-text {
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    color: #888;
+    pointer-events: none; /* чтобы не мешать клику по дроп-зоне */
+    background: transparent;
+    z-index: 1;
+    text-align: center;
+}
+
+#selection-canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    pointer-events: auto;
+    cursor: crosshair;
+}
+
+/* Отключаем события для canvas, если он есть */
+canvas {
+    pointer-events: none;
+}
+
+/* Активируем события только в режиме выделения */
+canvas.active {
+    pointer-events: auto;
+}
+
+.hidden {
+    display: none;
+}
+
+.btn-cont {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 12px;
+}
+
+.radio-group {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(3, auto);
+    gap: 6px 10px;
+    max-width: 850px;
+    width: 100%;
+    margin: 10px auto 0 auto;
+}
+
+.form_radio_btn {
+    width: 100%;
+}
+
+.form_radio_btn input[type=radio] {
+    display: none;
+}
+
+.form_radio_btn label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    min-height: 36px;
+    min-width: 160px;
+    padding: 6px 10px;
+    border: 1px solid #999;
+    border-radius: 6px;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.form_radio_btn input[type=radio]:checked + label {
+    background: #cfecfc;
+    color: #333;
+    border-color: #1a8ccc;
+}
+
+.form_radio_btn input[type=radio]:disabled + label {
+    color: #aaa;
+    border-color: #ccc;
+    background: #f0f0f0;
+    cursor: not-allowed;
+}
+
+#filter-btn {
+    grid-column: 4 / span 2; /* занимает 14 и 15 ячейку */
+    grid-row: 3;
+    height: 100%;
+    align-self: stretch;
+    font-size: 16px;
+    border-radius: 8px;
+    background-color: #0079c3;
+    border: none;
+    padding: 10px 16px;
+    color: white;
+    cursor: pointer;
+    font-weight: 400;
+    transition: background-color 0.3s;
+    max-height: 36px;
+}
+
+#filter-btn:hover {
+    background-color: #1469a0;
+}
+
+#filter-btn:disabled, #confirm-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+#delete-image-btn, #clear-btn,
+#activate-selection-btn, #delete-area-btn {
+    cursor: pointer;
+}
+
+
+#delete-image-btn:disabled, #clear-btn:disabled,
+#activate-selection-btn:disabled,  #delete-area-btn:disabled{
+    cursor: not-allowed;
+    filter: grayscale(1) brightness(1.3) contrast(0.8);
+}
+
+#activate-selection-btn, #clear-btn,
+#delete-area-btn, #delete-image-btn{
+    background: none;
+    border: none;
+}
+
+.folder-root-title {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: #0079c3;
+}
+
+.flex-div {
+    display: flex;
+}
+
+.disabled-div {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.flex-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 1500px;
+    max-width: 100%;
+    gap: 40px;
+    box-sizing: border-box;
+}
+
+.main-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+#drag-and-drop-zone {
+    width: 100%;
+    max-width: 2000px;
+    min-width: 900px;
+    height: 300px;
+    margin: 0 auto 30px auto;
+    z-index: 10;
+    position: relative;
+
+    border: 2px dashed #aaa;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.all-center {
+    margin-top: 10px;
+    width: 850px;
+}
+
+@media (min-width: 1487px) {
+    #folder-panel, .text-output {
+        width: 200px;
+    }
+}
+
+@media (min-width: 1679px){
+    #folder-panel, .text-output {
+        width: 290px;
+    }
+}
+
+@media (min-width: 1919px){
+    #folder-panel, .text-output {
+        width: 290px;
+        height: 500px;
+    }
+    #drag-and-drop-zone {
+        max-width: 1540px;
+        width: 1540px;
+    }
+    .flex-div {
+        width: 1540px;
+    }
+}
+
+@media (min-width: 2559px){
+    #folder-panel, .text-output {
+        width: 400px;
+        height: 600px;
+    }
+    #drag-and-drop-zone {
+        max-width: 2040px;
+        width: 2040px;
+        height: 450px;
+    }
+    .flex-div {
+        width: 2040px;
+    }
+    .btn-cont {
+        justify-content: center;
+    }
+    .all-center {
+        width: 1000px;
+    }
+    .radio-group {
+        max-width: 1000px;
+    }
+}

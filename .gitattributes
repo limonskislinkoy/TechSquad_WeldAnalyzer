@@ -1,0 +1,2 @@
+имя_файла filter=lfs diff=lfs merge=lfs -text
+server/segformer_output/segformer_best_checkpoint.pth filter=lfs diff=lfs merge=lfs -text
